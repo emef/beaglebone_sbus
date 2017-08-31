@@ -216,30 +216,30 @@ int sbus_write(sbus_t* sbus, uint16_t* channels_in) {
     packet[0] = SBUS_HEADER;
 
     // 16 channels_in of 11 bit data
-  	packet[1] = (uint8_t) ((channels_in[0] & 0x07FF));
-  	packet[2] = (uint8_t) ((channels_in[0] & 0x07FF)>>8 | (channels_in[1] & 0x07FF)<<3);
-  	packet[3] = (uint8_t) ((channels_in[1] & 0x07FF)>>5 | (channels_in[2] & 0x07FF)<<6);
-  	packet[4] = (uint8_t) ((channels_in[2] & 0x07FF)>>2);
-  	packet[5] = (uint8_t) ((channels_in[2] & 0x07FF)>>10 | (channels_in[3] & 0x07FF)<<1);
-  	packet[6] = (uint8_t) ((channels_in[3] & 0x07FF)>>7 | (channels_in[4] & 0x07FF)<<4);
-  	packet[7] = (uint8_t) ((channels_in[4] & 0x07FF)>>4 | (channels_in[5] & 0x07FF)<<7);
-  	packet[8] = (uint8_t) ((channels_in[5] & 0x07FF)>>1);
-  	packet[9] = (uint8_t) ((channels_in[5] & 0x07FF)>>9 | (channels_in[6] & 0x07FF)<<2);
-  	packet[10] = (uint8_t) ((channels_in[6] & 0x07FF)>>6 | (channels_in[7] & 0x07FF)<<5);
-  	packet[11] = (uint8_t) ((channels_in[7] & 0x07FF)>>3);
-  	packet[12] = (uint8_t) ((channels_in[8] & 0x07FF));
-  	packet[13] = (uint8_t) ((channels_in[8] & 0x07FF)>>8 | (channels_in[9] & 0x07FF)<<3);
-  	packet[14] = (uint8_t) ((channels_in[9] & 0x07FF)>>5 | (channels_in[10] & 0x07FF)<<6);
-  	packet[15] = (uint8_t) ((channels_in[10] & 0x07FF)>>2);
-  	packet[16] = (uint8_t) ((channels_in[10] & 0x07FF)>>10 | (channels_in[11] & 0x07FF)<<1);
-  	packet[17] = (uint8_t) ((channels_in[11] & 0x07FF)>>7 | (channels_in[12] & 0x07FF)<<4);
-  	packet[18] = (uint8_t) ((channels_in[12] & 0x07FF)>>4 | (channels_in[13] & 0x07FF)<<7);
-  	packet[19] = (uint8_t) ((channels_in[13] & 0x07FF)>>1);
-  	packet[20] = (uint8_t) ((channels_in[13] & 0x07FF)>>9 | (channels_in[14] & 0x07FF)<<2);
-  	packet[21] = (uint8_t) ((channels_in[14] & 0x07FF)>>6 | (channels_in[15] & 0x07FF)<<5);
-  	packet[22] = (uint8_t) ((channels_in[15] & 0x07FF)>>3);
+    packet[1] = (uint8_t) ((channels_in[0] & 0x07FF));
+    packet[2] = (uint8_t) ((channels_in[0] & 0x07FF)>>8 | (channels_in[1] & 0x07FF)<<3);
+    packet[3] = (uint8_t) ((channels_in[1] & 0x07FF)>>5 | (channels_in[2] & 0x07FF)<<6);
+    packet[4] = (uint8_t) ((channels_in[2] & 0x07FF)>>2);
+    packet[5] = (uint8_t) ((channels_in[2] & 0x07FF)>>10 | (channels_in[3] & 0x07FF)<<1);
+    packet[6] = (uint8_t) ((channels_in[3] & 0x07FF)>>7 | (channels_in[4] & 0x07FF)<<4);
+    packet[7] = (uint8_t) ((channels_in[4] & 0x07FF)>>4 | (channels_in[5] & 0x07FF)<<7);
+    packet[8] = (uint8_t) ((channels_in[5] & 0x07FF)>>1);
+    packet[9] = (uint8_t) ((channels_in[5] & 0x07FF)>>9 | (channels_in[6] & 0x07FF)<<2);
+    packet[10] = (uint8_t) ((channels_in[6] & 0x07FF)>>6 | (channels_in[7] & 0x07FF)<<5);
+    packet[11] = (uint8_t) ((channels_in[7] & 0x07FF)>>3);
+    packet[12] = (uint8_t) ((channels_in[8] & 0x07FF));
+    packet[13] = (uint8_t) ((channels_in[8] & 0x07FF)>>8 | (channels_in[9] & 0x07FF)<<3);
+    packet[14] = (uint8_t) ((channels_in[9] & 0x07FF)>>5 | (channels_in[10] & 0x07FF)<<6);
+    packet[15] = (uint8_t) ((channels_in[10] & 0x07FF)>>2);
+    packet[16] = (uint8_t) ((channels_in[10] & 0x07FF)>>10 | (channels_in[11] & 0x07FF)<<1);
+    packet[17] = (uint8_t) ((channels_in[11] & 0x07FF)>>7 | (channels_in[12] & 0x07FF)<<4);
+    packet[18] = (uint8_t) ((channels_in[12] & 0x07FF)>>4 | (channels_in[13] & 0x07FF)<<7);
+    packet[19] = (uint8_t) ((channels_in[13] & 0x07FF)>>1);
+    packet[20] = (uint8_t) ((channels_in[13] & 0x07FF)>>9 | (channels_in[14] & 0x07FF)<<2);
+    packet[21] = (uint8_t) ((channels_in[14] & 0x07FF)>>6 | (channels_in[15] & 0x07FF)<<5);
+    packet[22] = (uint8_t) ((channels_in[15] & 0x07FF)>>3);
 
-  	// flags
+    // flags
     packet[23] = 0x00;
 
     // footer
