@@ -6,7 +6,6 @@
 
 int main(int argc, char** argv) {
     sbus_t* sbus = sbus_new(2, 10, SBUS_CONFIG_PINS | SBUS_NONBLOCKING);
-    //sbus_t* sbus = sbus_new(5, 10, SBUS_CONFIG_PIN);
     if (!sbus) {
         fprintf(stderr, "Could not create SBUS handle: %s\n", strerror(errno));
         return 1;
