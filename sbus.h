@@ -80,6 +80,22 @@ int sbus_read(sbus_t* sbus, uint16_t* channels_out);
  */
 int sbus_write(sbus_t* sbus, uint16_t* channels_in);
 
+/*
+  Check if the failsafe flag was set in the last packet.
+
+  Returns:
+   1 if failsafe was set in the last packet, else 0.
+ */
+int sbus_failsafe(sbus_t* sbus);
+
+/*
+  Get the total number of lost frame messages received on the connection.
+
+  Returns:
+    Total number of lost frame messages received.
+ */
+int sbus_lost_frames(sbus_t* sbus);
+
 // --------------------------------------------------
 // Implementation
 
@@ -87,6 +103,8 @@ int sbus_write(sbus_t* sbus, uint16_t* channels_in);
 #define SBUS_HEADER 0x0F
 #define SBUS_FOOTER 0x00
 #define SBUS2_FOOTER 0x04
+#define SBUS_LOST_FRAME 0x04
+#define SBUS_FAILSAFE 0x08
 #define SBUS_BAUD_RATE 100000
 
 struct _sbus_t {
@@ -94,6 +112,8 @@ struct _sbus_t {
     uint8_t buffer[25];
     int buffer_ix;
     int timeout_ms;
+    int lost_frames;
+    int failsafe;
     struct timespec packet_start;
 };
 
@@ -152,13 +172,16 @@ int sbus_read(sbus_t *sbus, uint16_t* channels_out) {
         // search for the HEADER byte.
         for (int i=0; i<count; i++) {
             if (sbus->buffer[i] == SBUS_HEADER) {
-                sbus->buffer_ix = 25 - i;
+                // found the header; throw away everything in the buffer up to this point
 
-                if (i != 0) {
-                    // header found part-way through buffer, slide everything to left.
-                    memmove(sbus->buffer, sbus->buffer + i, 25 - i);
-                }
+                // number of bytes we've read from a valid packet
+                int packet_count = count - i;
 
+                // shift bytes from header onward to front of the buffer
+                memmove(sbus->buffer, sbus->buffer + i, packet_count);
+                sbus->buffer_ix = packet_count;
+
+                // update packet start timestamp
                 clock_gettime(CLOCK_MONOTONIC_RAW, &sbus->packet_start);
 
                 break;
@@ -175,6 +198,14 @@ int sbus_read(sbus_t *sbus, uint16_t* channels_out) {
         // ensure footer is valid, if not we throw away the packet.
         uint8_t footer = sbus->buffer[24];
         if (footer == SBUS_FOOTER || (footer & 0x0F) == SBUS2_FOOTER) {
+            uint8_t* packet = sbus->buffer + 1;
+
+            sbus->failsafe = packet[22] & SBUS_FAILSAFE;
+
+            if (packet[22] & SBUS_LOST_FRAME) {
+                sbus->lost_frames++;
+            }
+
             return decode_packet(sbus->buffer + 1, channels_out);
         }
 
@@ -186,6 +217,14 @@ int sbus_read(sbus_t *sbus, uint16_t* channels_out) {
     // didn't get a full, valid packet
     errno = EAGAIN;
     return -1;
+}
+
+int sbus_failsafe(sbus_t* sbus) {
+    return sbus->failsafe;
+}
+
+int sbus_lost_frames(sbus_t* sbus) {
+    return sbus->lost_frames;
 }
 
 int decode_packet(uint8_t* packet, uint16_t* channels_out) {
