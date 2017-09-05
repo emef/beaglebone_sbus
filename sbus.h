@@ -81,6 +81,11 @@ int sbus_read(sbus_t* sbus, uint16_t* channels_out);
 int sbus_write(sbus_t* sbus, uint16_t* channels_in);
 
 /*
+  Close SBUS serial connection.
+ */
+void sbus_close(sbus_t* sbus);
+
+/*
   Check if the failsafe flag was set in the last packet.
 
   Returns:
@@ -144,6 +149,8 @@ sbus_t* sbus_new(int uart_no, int timeout_ms, uint8_t flags) {
     sbus->fd = fd;
     sbus->buffer_ix = 0;
     sbus->timeout_ms = timeout_ms;
+    sbus->lost_frames = 0;
+    sbus->failsafe = 0;
     memset(sbus->buffer, 0, 25);
     clock_gettime(CLOCK_MONOTONIC_RAW, &sbus->packet_start);
 
@@ -289,6 +296,10 @@ int sbus_write(sbus_t* sbus, uint16_t* channels_in) {
     }
 
     return 0;
+}
+
+void sbus_close(sbus_t* sbus) {
+    close(sbus->fd);
 }
 
 int config_pins(int uart_no) {
